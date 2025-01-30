@@ -65,7 +65,7 @@ Explore how to retrieve information based on meaning rather than just keywordsâ€
 
 **Implementation:**
 
-```python:data_science/semantic_search/embedding_retrieval.py
+```python
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
@@ -158,7 +158,7 @@ if __name__ == "__main__":
 
 **Implementation:**
 
-```python:data_science/semantic_search/similarity_ranking.py
+```python
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
@@ -250,7 +250,7 @@ if __name__ == "__main__":
 
 **Implementation:**
 
-```python:data_science/chatbot/intent_recognition.py
+```python
 from sentence_transformers import SentenceTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
@@ -335,7 +335,7 @@ if __name__ == "__main__":
 
 **Out-of-Scope Detection:**
 
-```python:data_science/chatbot/out_of_scope.py
+```python
 def detect_out_of_scope(classifier, query, threshold=0.5):
     """
     Detect if a query is out-of-scope based on prediction confidence.
@@ -421,7 +421,7 @@ Understand how massive datasets (user behavior logs, product catalogs, etc.) are
 
 1. **Initialize Spark Session:**
 
-```python:data_science/big_data/spark_session.py
+```python
 from pyspark.sql import SparkSession
 
 def create_spark_session(app_name='EcommerceAnalytics'):
@@ -433,7 +433,7 @@ def create_spark_session(app_name='EcommerceAnalytics'):
 
 2. **Load and Preprocess Data:**
 
-```python:data_science/big_data/process_clickstream.py
+```python
 from spark_session import create_spark_session
 from pyspark.sql.functions import col, from_json, schema_of_json
 
@@ -455,7 +455,7 @@ if __name__ == "__main__":
 
 3. **Aggregate Metrics:**
 
-```python:data_science/big_data/aggregate_metrics.py
+```python
 from process_clickstream import clean_clickstream_data, load_clickstream_data
 from spark_session import create_spark_session
 from pyspark.sql.functions import count, avg
@@ -569,7 +569,7 @@ if __name__ == "__main__":
 
 **Example: Airflow DAG for Daily Product Catalog Update**
 
-```python:data_science/data_pipeline/airflow_dag.py
+```python
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.utils.dates import days_ago
@@ -659,7 +659,7 @@ with DAG(
 
 **Implementation Example: Integrating Redis Caching in Semantic Search**
 
-```python:data_science/semantic_search/redis_cache.py
+```python
 import redis
 import pickle
 
@@ -777,7 +777,7 @@ Bring together your advanced ML or deep learning knowledge in a real-world scena
 
 5. **Implementation Steps:**
 
-```python:data_science/semantic_search/daily_embedding_update.py
+```python
 from sentence_transformers import SentenceTransformer
 import pandas as pd
 import numpy as np
@@ -869,7 +869,7 @@ if __name__ == "__main__":
 
 4. **Implementation Steps:**
 
-```python:data_science/semantic_search/feedback_loop.py
+```python
 import pandas as pd
 import numpy as np
 from sentence_transformers import SentenceTransformer
@@ -968,7 +968,7 @@ if __name__ == "__main__":
 
 5. **Implementation Steps:**
 
-```python:data_science/semantic_search/multilingual_search.py
+```python
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
@@ -1129,7 +1129,7 @@ Create a quick design outline for either a semantic search system or a chatbot p
 
 **Implementation Example: Intent Recognition API**
 
-```python:data_science/chatbot/intent_api.py
+```python
 from flask import Flask, request, jsonify
 import joblib
 from sentence_transformers import SentenceTransformer

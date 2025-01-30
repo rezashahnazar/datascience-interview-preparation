@@ -44,7 +44,7 @@ Learn how to explore, visualize, and gain insights from a dataset before modelin
 
 1. **Identify Missing Values:**
 
-   ```python:data_preprocessing/identify_missing.py
+   ```python
    import pandas as pd
 
    def identify_missing_values(file_path):
@@ -73,7 +73,7 @@ Learn how to explore, visualize, and gain insights from a dataset before modelin
      - **Pros:** Retains data, which can be crucial for model performance.
      - **Cons:** Imputing can introduce bias if not done thoughtfully.
 
-   ```python:data_preprocessing/handle_missing.py
+   ```python
    import pandas as pd
    from sklearn.impute import SimpleImputer
 
@@ -101,7 +101,7 @@ Learn how to explore, visualize, and gain insights from a dataset before modelin
    - **Capping:**
      - Set thresholds (e.g., 5th and 95th percentiles) to cap extreme values.
 
-   ```python:data_preprocessing/handle_outliers.py
+   ```python
    import pandas as pd
    import numpy as np
 
@@ -152,7 +152,7 @@ Learn how to explore, visualize, and gain insights from a dataset before modelin
 
 1. **Calculate Descriptive Statistics:**
 
-   ```python:data_analysis/descriptive_statistics.py
+   ```python
    import pandas as pd
 
    def descriptive_statistics(file_path):
@@ -169,7 +169,7 @@ Learn how to explore, visualize, and gain insights from a dataset before modelin
 
 2. **Calculate Correlation Matrix:**
 
-   ```python:data_analysis/correlation_matrix.py
+   ```python
    import pandas as pd
    import seaborn as sns
    import matplotlib.pyplot as plt
@@ -189,7 +189,7 @@ Learn how to explore, visualize, and gain insights from a dataset before modelin
 
 3. **Scatter Plots and Pair Plots:**
 
-   ```python:data_analysis/pair_plots.py
+   ```python
    import pandas as pd
    import seaborn as sns
    import matplotlib.pyplot as plt
@@ -238,7 +238,7 @@ Learn how to explore, visualize, and gain insights from a dataset before modelin
 
 1. **Plotting Histograms and Box Plots:**
 
-   ```python:data_visualization/distributions.py
+   ```python
    import pandas as pd
    import seaborn as sns
    import matplotlib.pyplot as plt
@@ -270,7 +270,7 @@ Learn how to explore, visualize, and gain insights from a dataset before modelin
 
 2. **Identifying Skewness:**
 
-   ```python:data_visualization/skewness.py
+   ```python
    import pandas as pd
 
    def calculate_skewness(file_path):
@@ -287,7 +287,7 @@ Learn how to explore, visualize, and gain insights from a dataset before modelin
 
 3. **Applying Transformations:**
 
-   ```python:data_preprocessing/transformations.py
+   ```python
    import pandas as pd
    import numpy as np
 
@@ -341,7 +341,7 @@ Learn how to explore, visualize, and gain insights from a dataset before modelin
 
    - **Implementation Example:**
 
-     ```python:data_preprocessing/impute_missing_values.py
+     ```python
      import pandas as pd
      from sklearn.impute import SimpleImputer
 
@@ -367,7 +367,7 @@ Learn how to explore, visualize, and gain insights from a dataset before modelin
 
    - **Example:**
 
-     ```python:data_analysis/outliers_effect.py
+     ```python
      import numpy as np
 
      data = [10, 12, 12, 13, 12, 11, 12, 100]
@@ -404,7 +404,7 @@ Learn how to explore, visualize, and gain insights from a dataset before modelin
 
         - **Log Transformation:** Effective for right-skewed data.
 
-          ```python:data_preprocessing/log_transform.py
+          ```python
           import numpy as np
 
           def log_transform(df, column):
@@ -415,7 +415,7 @@ Learn how to explore, visualize, and gain insights from a dataset before modelin
         - **Square Root Transformation:** Useful for moderate skewness.
         - **Box-Cox Transformation:** More flexible, applicable for positive data.
 
-          ```python:data_preprocessing/box_cox_transform.py
+          ```python
           import pandas as pd
           from scipy import stats
 
@@ -438,7 +438,7 @@ Learn how to explore, visualize, and gain insights from a dataset before modelin
 
    - **Implementation Example:**
 
-     ```python:data_preprocessing/handle_skewed_variables.py
+     ```python
      import pandas as pd
      import numpy as np
      from scipy import stats
@@ -507,7 +507,7 @@ Refresh the core concepts of linear vs. logistic regression, along with classifi
 
 2. **Manual Implementation Using Gradient Descent:**
 
-   ```python:ml/gradient_descent_logistic.py
+   ```python
    import numpy as np
 
    class LogisticRegressionGD:
@@ -563,7 +563,7 @@ Refresh the core concepts of linear vs. logistic regression, along with classifi
 
 3. **Comparing with scikit-learn:**
 
-   ```python:ml/compare_with_sklearn.py
+   ```python
    import numpy as np
    from sklearn.model_selection import train_test_split
    from sklearn.metrics import accuracy_score
@@ -610,7 +610,7 @@ Refresh the core concepts of linear vs. logistic regression, along with classifi
 
    - **Without Regularization:**
 
-     ```python:ml/no_regularization.py
+     ```python
      model_manual_no_reg = LogisticRegressionGD(learning_rate=0.1, num_iterations=3000)
      model_manual_no_reg.fit(X_train, y_train)
      predictions_no_reg = model_manual_no_reg.predict(X_test)
@@ -620,7 +620,7 @@ Refresh the core concepts of linear vs. logistic regression, along with classifi
 
    - **With L2 Regularization:**
 
-     ```python:ml/l2_regularization.py
+     ```python
      model_manual_l2 = LogisticRegressionGD(learning_rate=0.1, num_iterations=3000, regularization='l2', lambda_=0.1)
      model_manual_l2.fit(X_train, y_train)
      predictions_l2 = model_manual_l2.predict(X_test)
@@ -630,7 +630,7 @@ Refresh the core concepts of linear vs. logistic regression, along with classifi
 
    - **With L1 Regularization:**
 
-     ```python:ml/l1_regularization.py
+     ```python
      model_manual_l1 = LogisticRegressionGD(learning_rate=0.1, num_iterations=3000, regularization='l1', lambda_=0.1)
      model_manual_l1.fit(X_train, y_train)
      predictions_l1 = model_manual_l1.predict(X_test)
@@ -662,7 +662,7 @@ Refresh the core concepts of linear vs. logistic regression, along with classifi
 
 1. **Manually Computing Metrics:**
 
-   ```python:metrics/manual_metrics.py
+   ```python
    import numpy as np
 
    def compute_confusion_matrix(y_true, y_pred):
@@ -702,7 +702,7 @@ Refresh the core concepts of linear vs. logistic regression, along with classifi
 
 2. **Adjusting Decision Threshold:**
 
-   ```python:metrics/threshold_analysis.py
+   ```python
    import numpy as np
    from sklearn.metrics import roc_auc_score
    from metrics.manual_metrics import compute_confusion_matrix, precision, recall, f1_score, accuracy, roc_auc
@@ -733,7 +733,7 @@ Refresh the core concepts of linear vs. logistic regression, along with classifi
 
 3. **k-Fold Cross-Validation:**
 
-   ```python:cv/k_fold_cv.py
+   ```python
    import numpy as np
    from sklearn.model_selection import KFold
    from sklearn.linear_model import LogisticRegression
@@ -798,7 +798,7 @@ Refresh the core concepts of linear vs. logistic regression, along with classifi
 
 2. **Experiment with Model Complexity:**
 
-   ```python:ml/bias_variance_experiment.py
+   ```python
    import numpy as np
    import matplotlib.pyplot as plt
    from sklearn.linear_model import LinearRegression
@@ -985,7 +985,7 @@ Understand decision trees and random forests—often asked about in interviews d
 
 1. **Training Decision Tree vs. Logistic Regression:**
 
-   ```python:ml/decision_tree_vs_logistic.py
+   ```python
    import pandas as pd
    from sklearn.model_selection import train_test_split
    from sklearn.tree import DecisionTreeClassifier
@@ -1030,7 +1030,7 @@ Understand decision trees and random forests—often asked about in interviews d
 
 2. **Investigating Parameters:**
 
-   ```python:ml/tuning_decision_tree.py
+   ```python
    from sklearn.tree import DecisionTreeClassifier
    from sklearn.metrics import classification_report
 
@@ -1093,7 +1093,7 @@ Understand decision trees and random forests—often asked about in interviews d
 
 1. **Training Single Decision Tree vs. Random Forest:**
 
-   ```python:ml/random_forest_vs_tree.py
+   ```python
    import pandas as pd
    from sklearn.model_selection import train_test_split
    from sklearn.tree import DecisionTreeClassifier
@@ -1146,7 +1146,7 @@ Understand decision trees and random forests—often asked about in interviews d
    - **Implementation Consideration:**
      - Increasing the number of trees (`n_estimators`) typically improves performance up to a point.
 
-   ```python:ml/random_forest_tuning.py
+   ```python
    from sklearn.ensemble import RandomForestClassifier
    from sklearn.metrics import classification_report
 
@@ -1170,7 +1170,7 @@ Understand decision trees and random forests—often asked about in interviews d
 
 3. **Feature Importances:**
 
-   ```python:ml/feature_importances.py
+   ```python
    import pandas as pd
    import matplotlib.pyplot as plt
 
@@ -1221,7 +1221,7 @@ Understand decision trees and random forests—often asked about in interviews d
 
 1. **Assessing Overfitting in Decision Trees:**
 
-   ```python:ml/overfitting_assessment.py
+   ```python
    from sklearn.tree import DecisionTreeClassifier
    from sklearn.metrics import classification_report
 
@@ -1244,7 +1244,7 @@ Understand decision trees and random forests—often asked about in interviews d
 
 2. **Checking Feature Importances:**
 
-   ```python:ml/feature_importance_comparison.py
+   ```python
    from sklearn.tree import DecisionTreeClassifier
    from sklearn.ensemble import RandomForestClassifier
    import pandas as pd

@@ -56,7 +56,7 @@ Revisit the basics of forward and backward propagation, ensuring you can concept
 
 **Implementation:**
 
-```python:data_science/mlp_from_scratch.py
+```python
 import numpy as np
 
 # Activation functions
@@ -241,7 +241,7 @@ Overfitting occurs when a model learns the training data too well, capturing noi
      - Typically applied after activation functions in hidden layers.
      - Example in PyTorch:
 
-       ```python:pytorch_models/dropout_example.py
+       ```python
        import torch
        import torch.nn as nn
 
@@ -269,7 +269,7 @@ Overfitting occurs when a model learns the training data too well, capturing noi
      - Incorporated directly into the optimizer.
      - Example in PyTorch:
 
-       ```python:pytorch_optimizers/weight_decay.py
+       ```python
        optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
        ```
 
@@ -283,7 +283,7 @@ Overfitting occurs when a model learns the training data too well, capturing noi
      - Stop training if no improvement is observed for a specified number of epochs.
      - Example Logic:
 
-       ```python:early_stopping/early_stopping.py
+       ```python
        best_val_loss = float('inf')
        patience = 10
        trigger_times = 0
@@ -311,7 +311,7 @@ Overfitting occurs when a model learns the training data too well, capturing noi
      - Common in image processing tasks.
      - Example using TensorFlow:
 
-       ```python:tensorflow_augment/data_augmentation.py
+       ```python
        import tensorflow as tf
 
        data_augmentation = tf.keras.Sequential([
@@ -330,7 +330,7 @@ Overfitting occurs when a model learns the training data too well, capturing noi
      - Inserted between linear and activation layers.
      - Example in PyTorch:
 
-       ```python:pytorch_models/batch_norm_example.py
+       ```python
        import torch.nn as nn
 
        class BatchNormMLP(nn.Module):
@@ -408,7 +408,7 @@ Dive deeper into either computer vision with CNNs or NLP with RNNs/Transformers 
 
 2. **Implementation:**
 
-```python:pytorch_models/simple_cnn.py
+```python
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -533,7 +533,7 @@ python pytorch_models/simple_cnn.py
 
 **Implementation:**
 
-```python:pytorch_autograd/comparison.py
+```python
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -674,7 +674,7 @@ Learn how hyperparameters (learning rate, batch size, number of layers/units) ca
 
 **Implementation:**
 
-```python:pytorch_hyperparameter_tuning/hyperparam_tuning.py
+```python
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -815,7 +815,7 @@ Hyperparameter tuning is crucial for optimizing model performance. By experiment
    - Identify the learning rate at which the loss starts to decrease rapidly before it begins to diverge.
    - Example:
 
-     ```python:pytorch_lr_finder/lr_finder.py
+     ```python
      import torch
      import torch.nn as nn
      import torch.optim as optim
@@ -890,7 +890,7 @@ Hyperparameter tuning is crucial for optimizing model performance. By experiment
    - Reduce the learning rate by a factor at specific epochs.
    - Example:
 
-     ```python:pytorch_sched/step_decay.py
+     ```python
      scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
      ```
 
@@ -899,7 +899,7 @@ Hyperparameter tuning is crucial for optimizing model performance. By experiment
    - Multiply the learning rate by a continuous decay factor.
    - Example:
 
-     ```python:pytorch_sched/exponential_decay.py
+     ```python
      scheduler = optim.lr_scheduler.ExponentialLR(optimizer, gamma=0.95)
      ```
 
@@ -908,7 +908,7 @@ Hyperparameter tuning is crucial for optimizing model performance. By experiment
    - Vary the learning rate following a cosine curve, allowing for periodic restarts.
    - Example:
 
-     ```python:pytorch_sched/cosine_annealing.py
+     ```python
      scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=50)
      ```
 
@@ -917,7 +917,7 @@ Hyperparameter tuning is crucial for optimizing model performance. By experiment
    - Helps in escaping local minima.
    - Example using `torch.optim.lr_scheduler.CyclicLR`:
 
-     ```python:pytorch_sched/cyclic_lr.py
+     ```python
      scheduler = optim.lr_scheduler.CyclicLR(optimizer, base_lr=1e-5, max_lr=1e-3)
      ```
 
@@ -981,7 +981,7 @@ Batch Normalization is a technique that normalizes the inputs of each layer to i
 
 **Implementation Example:**
 
-```python:pytorch_models/batch_norm_cnn.py
+```python
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -1128,7 +1128,7 @@ When the training loss decreases continuously while the validation loss plateaus
 
 **Implementation Example: Early Stopping with PyTorch**
 
-```python:pytorch_training/early_stopping.py
+```python
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -1257,7 +1257,7 @@ You're experimenting with deep learning, consider how these methods might apply 
 
 **Example Implementation: Product Image Classification with CNN**
 
-```python:pytorch_ecommerce/product_image_classifier.py
+```python
 import torch
 import torch.nn as nn
 import torch.optim as optim

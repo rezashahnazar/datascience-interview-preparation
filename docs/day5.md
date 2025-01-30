@@ -74,7 +74,7 @@ Work on a holistic, realistic scenario that integrates data engineering, classic
 
      - **Implementation:**
 
-       ```python:data_cleaning/load_and_clean.py
+       ```python
        import pandas as pd
 
        def load_data(file_path):
@@ -114,7 +114,7 @@ Work on a holistic, realistic scenario that integrates data engineering, classic
 
      - **Implementation:**
 
-       ```python:feature_engineering/feature_engineer.py
+       ```python
        import pandas as pd
 
        def combine_text_fields(df):
@@ -135,7 +135,7 @@ Work on a holistic, realistic scenario that integrates data engineering, classic
 
      - **Implementation:**
 
-       ```python:user_signals/user_signals.py
+       ```python
        import pandas as pd
 
        def incorporate_user_signals(df):
@@ -158,7 +158,7 @@ Work on a holistic, realistic scenario that integrates data engineering, classic
 
      - **Implementation:**
 
-       ```python:semantic_search/sbert_embedding.py
+       ```python
        from sentence_transformers import SentenceTransformer
        import pandas as pd
        import pickle
@@ -194,7 +194,7 @@ Work on a holistic, realistic scenario that integrates data engineering, classic
 
      - **Implementation:**
 
-       ```python:semantic_search/semantic_search.py
+       ```python
        from sentence_transformers import SentenceTransformer
        from sklearn.metrics.pairwise import cosine_similarity
        import pandas as pd
@@ -243,7 +243,7 @@ Work on a holistic, realistic scenario that integrates data engineering, classic
 
      - **Implementation:**
 
-       ```python:evaluation/evaluate_semantic_search.py
+       ```python
        from sklearn.metrics import recall_score, average_precision_score
        import pandas as pd
        from semantic_search.semantic_search import search, load_data, load_embeddings, SentenceTransformer
