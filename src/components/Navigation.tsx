@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import ThemeToggle from "./ThemeToggle";
 
 interface NavigationItem {
   slug: string;
@@ -74,7 +75,7 @@ export default function Navigation({ items }: NavigationProps) {
 
       {/* Sidebar Navigation */}
       <nav
-        className={`fixed top-0 left-0 h-screen w-[280px] lg:w-56 bg-white dark:bg-zinc-900 p-3 overflow-y-auto transform transition-transform duration-300 ease-in-out z-50 border-r border-gray-100 dark:border-zinc-800 shadow-lg ${
+        className={`fixed top-0 left-0 h-screen w-[280px] lg:w-56 bg-white dark:bg-zinc-900 p-3 overflow-y-auto transform transition-transform duration-300 ease-in-out z-50 border-r border-gray-100 dark:border-zinc-800 shadow-lg flex flex-col ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 lg:top-0`}
       >
@@ -91,7 +92,7 @@ export default function Navigation({ items }: NavigationProps) {
             Data Science Learning
           </Link>
         </div>
-        <ul className="space-y-1.5 mt-6 lg:mt-0">
+        <ul className="space-y-1.5 mt-6 lg:mt-0 flex-1">
           {navigationItems.map((item) => {
             const isActive = pathname === `/${item.slug}`;
             return (
@@ -111,6 +112,9 @@ export default function Navigation({ items }: NavigationProps) {
             );
           })}
         </ul>
+        <div className="mt-6 pt-6 border-t border-gray-100 dark:border-zinc-800">
+          <ThemeToggle />
+        </div>
       </nav>
     </>
   );

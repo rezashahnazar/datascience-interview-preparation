@@ -22,14 +22,14 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
         components={{
           pre: ({ ...props }) => (
             <pre
-              className="bg-gray-50 dark:bg-zinc-900 p-3 rounded-lg overflow-x-auto text-sm shadow-sm border border-gray-100 dark:border-zinc-800"
+              className="bg-zinc-50 dark:bg-zinc-900 p-3 rounded-lg overflow-x-auto text-sm shadow-sm border border-zinc-200 dark:border-zinc-800 [&>code]:!bg-transparent [&>code]:p-0 [&>code]:text-zinc-800 dark:[&>code]:text-zinc-200 [&>code_.hljs-keyword]:text-purple-500 dark:[&>code_.hljs-keyword]:text-purple-400 [&>code_.hljs-string]:text-emerald-500 dark:[&>code_.hljs-string]:text-emerald-400 [&>code_.hljs-number]:text-amber-500 dark:[&>code_.hljs-number]:text-amber-400 [&>code_.hljs-comment]:text-zinc-400 dark:[&>code_.hljs-comment]:text-zinc-500 [&>code_.hljs-operator]:text-indigo-500 dark:[&>code_.hljs-operator]:text-indigo-400 [&>code_.hljs-function]:text-blue-500 dark:[&>code_.hljs-function]:text-blue-400 [&>code_.hljs-class]:text-yellow-500 dark:[&>code_.hljs-class]:text-yellow-400"
               {...props}
             />
           ),
           code: ({ inline, ...props }: CodeProps) =>
             inline ? (
               <code
-                className="bg-gray-50 dark:bg-zinc-900 px-1 py-0.5 rounded text-sm"
+                className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-sm text-zinc-800 dark:text-zinc-200"
                 {...props}
               />
             ) : (

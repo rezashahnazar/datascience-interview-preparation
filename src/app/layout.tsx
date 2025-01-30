@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import { getAllDocs } from "@/utils/markdown";
+import CustomThemeProvider from "@/components/ThemeProvider";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Data Science Learning",
@@ -21,13 +25,20 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className="min-h-screen bg-white dark:bg-zinc-900">
-        <div className="flex min-h-screen">
-          <Navigation items={navigationItems} />
-          <main className="flex-1 px-5 py-4 pt-16 lg:pt-4 lg:p-6 lg:ml-56 w-full overflow-x-hidden bg-white dark:bg-zinc-900">
-            <div className="max-w-3xl mx-auto">{children}</div>
-          </main>
-        </div>
+      <body className={inter.className}>
+        <CustomThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="flex min-h-dvh bg-background text-foreground">
+            <Navigation items={navigationItems} />
+            <main className="flex-1 px-5 py-4 pt-16 lg:pt-4 lg:p-6 lg:ml-56 w-full overflow-x-hidden">
+              <div className="max-w-3xl mx-auto">{children}</div>
+            </main>
+          </div>
+        </CustomThemeProvider>
       </body>
     </html>
   );

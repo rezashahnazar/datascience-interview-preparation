@@ -1,4 +1,5 @@
 @import 'highlight.js/styles/github-dark.css';
+@import 'highlight.js/styles/github.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,39 +15,109 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #b0bec5;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #666;
+  background: #90a4ae;
 }
 
-/* Dark mode scrollbar */
-@media (prefers-color-scheme: dark) {
-  ::-webkit-scrollbar-thumb {
-    background: #666;
-  }
-  
-  ::-webkit-scrollbar-thumb:hover {
-    background: #888;
-  }
-}
-
+/* Light Theme Variables */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f9fafb;
+  --foreground: #1f2937;
+  --primary: #2563eb; /* Blue-600 */
+  --secondary: #6d28d9; /* Purple-600 */
+  --accent: #f59e0b; /* Amber-500 */
+  --error: #dc2626; /* Red-600 */
+  --success: #16a34a; /* Green-700 */
+  --warning: #fbbf24; /* Yellow-500 */
+  --info: #3b82f6; /* Blue-500 */
+  --muted: #6b7280; /* Gray-500 */
+  --light-border: #e5e7eb; /* Gray-200 */
+  --light-bg-alt: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Dark Theme Variables */
+.dark {
+  --background: #111827;
+  --foreground: #f3f4f6;
+  --primary: #60a5fa; /* Blue-400 */
+  --secondary: #a78bfa; /* Purple-400 */
+  --accent: #fbbf24; /* Amber-400 */
+  --error: #f87171; /* Red-400 */
+  --success: #4ade80; /* Green-400 */
+  --warning: #fde047; /* Yellow-300 */
+  --info: #60a5fa; /* Blue-400 */
+  --muted: #9ca3af; /* Gray-400 */
+  --light-border: #374151; /* Gray-700 */
+  --light-bg-alt: #1f2937;
+  --shadow: rgba(255, 255, 255, 0.1);
+
+  /* Add smooth transition */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Ensure smooth transition on theme change */
 body {
+  transition: background-color 0.3s ease, color 0.3s ease;
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Utility Classes for Colors */
+.primary {
+  color: var(--primary);
+}
+
+.secondary {
+  color: var(--secondary);
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.error {
+  color: var(--error);
+}
+
+.success {
+  color: var(--success);
+}
+
+.warning {
+  color: var(--warning);
+}
+
+.info {
+  color: var(--info);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.light-border {
+  border-color: var(--light-border);
+}
+
+.light-bg-alt {
+  background-color: var(--light-bg-alt);
+}
+
+.shadow {
+  box-shadow: 0 4px 6px var(--shadow);
+}
+
+/* Enhanced Scrollbar Styles for Dark Mode */
+.dark ::-webkit-scrollbar-thumb {
+  background: #4b5563;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334155;
 }
