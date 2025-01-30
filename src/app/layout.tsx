@@ -10,6 +10,31 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Data Science Learning",
   description: "A comprehensive guide to data science interview preparation",
+  icons: {
+    icon: [
+      {
+        url: "/favicon.ico",
+        sizes: "any",
+      },
+      {
+        url: "/favicon.svg",
+        type: "image/svg+xml",
+      },
+    ],
+  },
+  authors: [
+    {
+      name: "Reza Shahnazar",
+      url: "https://github.com/rezashahnazar",
+    },
+  ],
+  creator: "Reza Shahnazar",
+  publisher: "Digikala",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
 };
 
 export default function RootLayout({

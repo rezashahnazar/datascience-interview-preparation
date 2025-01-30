@@ -14,7 +14,7 @@ export default function CustomThemeProvider({
   ...props
 }: {
   children: React.ReactNode;
-  [key: string]: any;
+  [key: string]: unknown;
 }) {
   return <ThemeProvider {...props}>{children}</ThemeProvider>;
 }
