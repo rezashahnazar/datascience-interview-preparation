@@ -85,12 +85,17 @@ export default function SelectableContent({
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
 
+    // Get the selected text before any state changes
     const selectedText = selection.toString().trim();
     const markdownContent = findMarkdownContent(selectedText);
 
+    // Log the selection details
     console.log(`Selected option: ${option}`);
     console.log(`Selected text: ${selectedText}`);
     console.log(`Selected markdown: ${markdownContent}`);
+
+    // Clear the selection after logging
+    selection.removeAllRanges();
   };
 
   return (
