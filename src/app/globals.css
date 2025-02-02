@@ -1,5 +1,3 @@
-@import 'highlight.js/styles/github-dark.css';
-@import 'highlight.js/styles/github.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -42,7 +40,7 @@
 
 /* Dark Theme Variables */
 .dark {
-  --background: #111827;
+  --background: #232528;
   --foreground: #f3f4f6;
   --primary: #60a5fa; /* Blue-400 */
   --secondary: #a78bfa; /* Purple-400 */
