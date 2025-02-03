@@ -18,7 +18,7 @@ export function useScrollControl(isLoading: boolean) {
 
   // Optimized scroll handler with debounce
   const debouncedCheckScroll = useCallback(
-    debounce(checkScroll, 100, { leading: true }),
+    () => debounce(checkScroll, 100, { leading: true }),
     [checkScroll]
   );
 
@@ -26,16 +26,14 @@ export function useScrollControl(isLoading: boolean) {
     const container = containerRef.current;
     if (!container) return;
 
+    const scrollHandler = debouncedCheckScroll();
     // Use passive event listener for better performance
-    container.addEventListener("scroll", debouncedCheckScroll, {
+    container.addEventListener("scroll", scrollHandler, {
       passive: true,
     });
 
     return () => {
-      container.removeEventListener("scroll", debouncedCheckScroll);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
+      container.removeEventListener("scroll", scrollHandler);
     };
   }, [debouncedCheckScroll]);
 

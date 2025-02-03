@@ -9,7 +9,7 @@ interface DebounceOptions {
   leading?: boolean;
 }
 
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: Parameters<T>) => ReturnType<T>>(
   func: T,
   wait: number,
   options: DebounceOptions = {}
@@ -17,27 +17,25 @@ export function debounce<T extends (...args: any[]) => any>(
   let timeoutId: ReturnType<typeof setTimeout> | undefined;
   let lastArgs: Parameters<T> | undefined;
 
-  return function debounced(this: any, ...args: Parameters<T>) {
-    const context = this;
+  return function debounced(...args: Parameters<T>) {
+    // Using arrow function to preserve this context
+    const executeFunction = () => {
+      func(...args);
+      timeoutId = undefined;
+    };
 
     // If leading is true and there's no timeout, execute immediately
     if (options.leading && !timeoutId) {
-      func.apply(context, args);
+      executeFunction();
+      return;
     }
 
-    lastArgs = args;
-
-    // Clear the existing timeout (if any)
+    // Clear the existing timeout
     if (timeoutId) {
       clearTimeout(timeoutId);
     }
 
     // Set up new timeout
-    timeoutId = setTimeout(() => {
-      if (!options.leading || timeoutId) {
-        func.apply(context, lastArgs!);
-      }
-      timeoutId = undefined;
-    }, wait);
+    timeoutId = setTimeout(executeFunction, wait);
   };
 }
