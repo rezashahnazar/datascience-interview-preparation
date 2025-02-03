@@ -30,51 +30,43 @@ export default function SelectionDropdown({
   const calculatePosition = useCallback((rect: DOMRect): Position => {
     const MARGIN = 10;
     const DROPDOWN_HEIGHT = 120; // Approximate height of dropdown with all options
-    const DROPDOWN_WIDTH = 160; // Width of the dropdown
-
-    // Get the current scroll position
-    const scrollY = window.scrollY;
-    const scrollX = window.scrollX;
-
-    // Get viewport dimensions
+    const IOS_ACTION_BAR_HEIGHT = 50; // Approximate height of iOS action bar
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
 
-    // Calculate available space below and above the selection
-    const spaceBelow = viewportHeight - (rect.bottom - scrollY);
-    const spaceAbove = rect.top - scrollY;
+    // Detect iOS Safari
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+      !/CriOS|FxiOS/.test(navigator.userAgent) &&
+      "ontouchend" in document;
 
-    // Determine vertical position
-    let top;
-    if (spaceBelow >= DROPDOWN_HEIGHT + MARGIN) {
-      // If enough space below, position dropdown below selection
-      top = rect.bottom;
-    } else if (spaceAbove >= DROPDOWN_HEIGHT + MARGIN) {
-      // If enough space above, position dropdown above selection
-      top = rect.top - DROPDOWN_HEIGHT - MARGIN;
-    } else {
-      // If not enough space either way, choose the side with more space
-      top =
-        spaceBelow >= spaceAbove
-          ? rect.bottom
-          : rect.top - DROPDOWN_HEIGHT - MARGIN;
-    }
+    // Calculate space available above and below selection
+    const spaceAbove = rect.top;
+    const spaceBelow = viewportHeight - rect.bottom;
+    const effectiveSpaceBelow = isIOS
+      ? spaceBelow - IOS_ACTION_BAR_HEIGHT
+      : spaceBelow;
+
+    // Determine if we should position above or below
+    const shouldPositionAbove =
+      effectiveSpaceBelow < DROPDOWN_HEIGHT + MARGIN &&
+      spaceAbove > DROPDOWN_HEIGHT + MARGIN;
+
+    // Calculate vertical position
+    let top = shouldPositionAbove
+      ? Math.max(MARGIN, rect.top - DROPDOWN_HEIGHT - MARGIN)
+      : rect.bottom + MARGIN;
 
     // Calculate horizontal position
-    let left = rect.left + rect.width / 2 - DROPDOWN_WIDTH / 2;
+    const left = Math.max(
+      MARGIN,
+      Math.min(
+        rect.left + rect.width / 2 - 80, // 80 is half of min-w-[160px]
+        viewportWidth - 160 - MARGIN // Ensure dropdown doesn't go off-screen horizontally
+      )
+    );
 
-    // Ensure dropdown stays within horizontal viewport bounds
-    if (left < MARGIN) {
-      left = MARGIN;
-    } else if (left + DROPDOWN_WIDTH > viewportWidth - MARGIN) {
-      left = viewportWidth - DROPDOWN_WIDTH - MARGIN;
-    }
-
-    // Return absolute positions (including scroll offset)
-    return {
-      top: top + scrollY,
-      left: left + scrollX,
-    };
+    return { top, left };
   }, []);
 
   const checkSelection = useCallback(() => {
@@ -199,11 +191,13 @@ export default function SelectionDropdown({
 
   return (
     <div
-      className="absolute z-[9999] bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-1 min-w-[160px] select-none animate-fade-in [&_*]:!select-none [-webkit-touch-callout:none]"
+      className="fixed z-[9999] bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-1 min-w-[160px] select-none animate-fade-in [&_*]:!select-none [-webkit-touch-callout:none]"
       style={{
         top: `${position.top}px`,
         left: `${position.left}px`,
         WebkitTouchCallout: "none",
+        WebkitUserSelect: "none",
+        userSelect: "none",
       }}
     >
       {options.map((option) => (
