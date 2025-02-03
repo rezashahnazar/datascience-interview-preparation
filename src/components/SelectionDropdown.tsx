@@ -199,13 +199,11 @@ export default function SelectionDropdown({
 
   return (
     <div
-      className="absolute z-[9999] bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-1 min-w-[160px] select-none animate-fade-in [&_*]:!select-none [-webkit-touch-callout:none] [-webkit-user-select:none] [user-select:none]"
+      className="absolute z-[9999] bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-1 min-w-[160px] select-none animate-fade-in [&_*]:!select-none [-webkit-touch-callout:none]"
       style={{
         top: `${position.top}px`,
         left: `${position.left}px`,
         WebkitTouchCallout: "none",
-        WebkitUserSelect: "none",
-        userSelect: "none",
       }}
     >
       {options.map((option) => (
