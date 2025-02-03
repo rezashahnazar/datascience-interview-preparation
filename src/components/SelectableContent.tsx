@@ -13,72 +13,106 @@ export default function SelectableContent({
   originalContent,
 }: SelectableContentProps) {
   const findMarkdownContent = (selectedText: string): string => {
-    // Split the selected text and original content into lines
-    const selectedLines = selectedText.split("\n");
-    const contentLines = originalContent.split("\n");
+    if (!originalContent || !selectedText) return "";
 
-    // Find the first and last lines in the original content
+    const trimmedSelection = selectedText.trim();
+    if (!trimmedSelection) return "";
+
+    // Split into lines for better matching
+    const selectedLines = trimmedSelection
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+    if (selectedLines.length === 0) return "";
+
+    // Find the first occurrence of the first selected line
+    const firstLine = selectedLines[0];
+    const lastLine = selectedLines[selectedLines.length - 1];
+
+    const contentLines = originalContent.split("\n");
     let startLineIndex = -1;
     let endLineIndex = -1;
 
-    const cleanMarkdown = (text: string) => {
-      return text
-        .replace(/^[#\s-]+/, "") // Remove heading markers and list markers
-        .replace(/\*\*/g, "") // Remove bold markers
-        .replace(/\*/g, "") // Remove italic markers
-        .replace(/`/g, "") // Remove code markers
-        .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // Remove link formatting
-        .replace(/^>/g, "") // Remove blockquote markers
-        .trim();
-    };
+    // Helper function to clean line for comparison
+    const cleanLine = (line: string) =>
+      line
+        .trim()
+        .replace(/^[`\s]+|[`\s]+$/g, "") // Remove backticks and whitespace
+        .replace(/^\s*[-*+]\s+/, "") // Remove list markers
+        .replace(/^\s*\d+\.\s+/, ""); // Remove numbered list markers
 
+    // Find the start line with cleaned comparison
+    const cleanFirstLine = cleanLine(firstLine);
     for (let i = 0; i < contentLines.length; i++) {
-      const line = contentLines[i];
-      const cleanLine = cleanMarkdown(line);
-      const cleanSelectedLine = cleanMarkdown(selectedLines[0]);
-
-      // Find the first line that matches
-      if (startLineIndex === -1 && cleanLine === cleanSelectedLine) {
+      if (cleanLine(contentLines[i]).includes(cleanFirstLine)) {
         startLineIndex = i;
+        break;
       }
+    }
 
-      // Find the last line that matches
-      const lastSelectedLine = cleanMarkdown(
-        selectedLines[selectedLines.length - 1]
-      );
-      if (cleanMarkdown(line).includes(lastSelectedLine)) {
+    // If we couldn't find the start, return the original selection
+    if (startLineIndex === -1) return selectedText;
+
+    // Find the end line with cleaned comparison
+    const cleanLastLine = cleanLine(lastLine);
+    for (let i = startLineIndex; i < contentLines.length; i++) {
+      if (cleanLine(contentLines[i]).includes(cleanLastLine)) {
         endLineIndex = i;
-        // Only break if we've found both the start and a matching end after it
-        if (startLineIndex !== -1 && endLineIndex >= startLineIndex) {
-          // If this is a partial line selection, check if there's more content
-          const cleanLastSelected = cleanMarkdown(
-            selectedLines[selectedLines.length - 1]
-          );
-          const cleanCurrentLine = cleanMarkdown(line);
-          if (cleanCurrentLine.length > cleanLastSelected.length) {
-            // Only break if this is the best match so far
-            if (cleanCurrentLine.indexOf(cleanLastSelected) === 0) {
-              break;
-            }
-          } else {
-            break;
-          }
-        }
+        break;
       }
     }
 
-    // If we found valid start and end positions, extract the markdown
-    if (
-      startLineIndex !== -1 &&
-      endLineIndex !== -1 &&
-      endLineIndex >= startLineIndex
-    ) {
-      // Return the original markdown content with formatting
-      return contentLines.slice(startLineIndex, endLineIndex + 1).join("\n");
+    // If we couldn't find the end, use the start line
+    if (endLineIndex === -1) endLineIndex = startLineIndex;
+
+    // Check if we're inside a code block
+    let isInCodeBlock = false;
+    for (let i = 0; i < startLineIndex; i++) {
+      if (contentLines[i].trim().startsWith("```")) {
+        isInCodeBlock = !isInCodeBlock;
+      }
     }
 
-    // Fallback to the selected text if we couldn't find a match
-    return selectedText;
+    // If in code block, expand selection to include the entire block
+    if (isInCodeBlock) {
+      while (
+        startLineIndex > 0 &&
+        !contentLines[startLineIndex - 1].trim().startsWith("```")
+      ) {
+        startLineIndex--;
+      }
+      if (startLineIndex > 0) startLineIndex--; // Include the opening ```
+
+      while (
+        endLineIndex < contentLines.length - 1 &&
+        !contentLines[endLineIndex + 1].trim().startsWith("```")
+      ) {
+        endLineIndex++;
+      }
+      if (endLineIndex < contentLines.length - 1) endLineIndex++; // Include the closing ```
+    } else {
+      // Regular text: Include context within the same section
+      while (
+        startLineIndex > 0 &&
+        contentLines[startLineIndex - 1].trim() !== ""
+      ) {
+        if (contentLines[startLineIndex - 1].startsWith("#")) break;
+        startLineIndex--;
+      }
+
+      while (
+        endLineIndex < contentLines.length - 1 &&
+        contentLines[endLineIndex + 1].trim() !== ""
+      ) {
+        if (contentLines[endLineIndex + 1].startsWith("#")) break;
+        endLineIndex++;
+      }
+    }
+
+    return contentLines
+      .slice(startLineIndex, endLineIndex + 1)
+      .join("\n")
+      .trim();
   };
 
   const handleOptionSelect = (option: string) => {
