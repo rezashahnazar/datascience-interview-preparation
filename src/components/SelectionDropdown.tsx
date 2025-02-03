@@ -96,12 +96,6 @@ export default function SelectionDropdown({
       setIsToggling(true);
       setIsVisible((prev) => !prev);
 
-      // Clear the selection and last selection text when hiding dropdown
-      if (selection) {
-        selection.removeAllRanges();
-        setLastSelectionText("");
-      }
-
       // Reset toggling state after a short delay
       setTimeout(() => {
         setIsToggling(false);
@@ -150,7 +144,8 @@ export default function SelectionDropdown({
       if (!isToggling && "ontouchstart" in window && !isSelecting) {
         const selection = window.getSelection();
         const text = selection?.toString().trim() || "";
-        if (text !== lastSelectionText) {
+        // Only update if we have a new selection that's different from the current one
+        if (text && text !== lastSelectionText) {
           checkSelection();
         }
       }
