@@ -51,9 +51,6 @@ export default function SelectionDropdown({
   }, []);
 
   const checkSelection = useCallback(() => {
-    // Only check selection if we're not actively selecting
-    if (isSelecting) return;
-
     const selection = window.getSelection();
     if (!selection || selection.isCollapsed) {
       // Keep dropdown visible if clicking on existing selection
@@ -77,11 +74,13 @@ export default function SelectionDropdown({
     const rect = range.getBoundingClientRect();
     setPosition(calculatePosition(rect));
     setIsVisible(true);
-  }, [isSelecting, calculatePosition, lastSelectionText]);
+  }, [calculatePosition, lastSelectionText]);
 
   const handleSelectionStart = useCallback(() => {
-    setIsVisible(false);
-    currentSelectionRef.current = null;
+    if (!("ontouchstart" in window)) {
+      setIsVisible(false);
+      currentSelectionRef.current = null;
+    }
   }, []);
 
   const handleTouchStart = useCallback(() => {
@@ -100,12 +99,23 @@ export default function SelectionDropdown({
   }, [lastSelectionText]);
 
   const handleTouchEnd = useCallback(() => {
-    if (!isSelecting) return;
-
     setIsSelecting(false);
-    // Small delay to ensure selection is complete
-    setTimeout(checkSelection, 150);
-  }, [isSelecting, checkSelection]);
+    // Check selection immediately after touch end
+    setTimeout(() => {
+      const selection = window.getSelection();
+      if (selection && !selection.isCollapsed) {
+        const text = selection.toString().trim();
+        if (text) {
+          setLastSelectionText(text);
+          currentSelectionRef.current = selection;
+          const range = selection.getRangeAt(0);
+          const rect = range.getBoundingClientRect();
+          setPosition(calculatePosition(rect));
+          setIsVisible(true);
+        }
+      }
+    }, 100);
+  }, [calculatePosition]);
 
   useEffect(() => {
     // For desktop: only show dropdown after mouseup (selection complete)
@@ -116,9 +126,9 @@ export default function SelectionDropdown({
     document.addEventListener("touchend", handleTouchEnd);
     document.addEventListener("touchstart", handleTouchStart);
 
-    // Remove selectionchange handler for desktop to prevent early dropdown
+    // Handle selection changes for both desktop and touch
     const handleSelectionChange = () => {
-      if ("ontouchstart" in window) {
+      if ("ontouchstart" in window && !isSelecting) {
         checkSelection();
       }
     };
@@ -132,11 +142,11 @@ export default function SelectionDropdown({
       document.removeEventListener("selectionchange", handleSelectionChange);
     };
   }, [
-    isSelecting,
     checkSelection,
     handleTouchEnd,
     handleSelectionStart,
     handleTouchStart,
+    isSelecting,
   ]);
 
   if (!isVisible) return null;
