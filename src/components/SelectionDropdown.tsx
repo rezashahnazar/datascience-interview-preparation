@@ -188,10 +188,13 @@ export default function SelectionDropdown({
 
   return (
     <div
-      className="fixed z-50 bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-1 min-w-[160px] select-none animate-fade-in"
+      className="fixed z-[9999] bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-1 min-w-[160px] select-none animate-fade-in [&_*]:!select-none [-webkit-touch-callout:none] [-webkit-user-select:none] [user-select:none]"
       style={{
         top: `${position.top}px`,
         left: `${position.left}px`,
+        WebkitTouchCallout: "none",
+        WebkitUserSelect: "none",
+        userSelect: "none",
       }}
     >
       {options.map((option) => (
@@ -200,6 +203,11 @@ export default function SelectionDropdown({
           className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 select-none"
           onMouseDown={(e) => {
             e.preventDefault(); // Prevent selection from being cleared
+            onOptionSelect(option.id);
+            setIsVisible(false);
+          }}
+          onTouchStart={(e) => {
+            e.preventDefault(); // Prevent native touch selection
             onOptionSelect(option.id);
             setIsVisible(false);
           }}
