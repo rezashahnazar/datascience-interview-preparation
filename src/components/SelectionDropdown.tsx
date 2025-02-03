@@ -18,6 +18,7 @@ export default function SelectionDropdown({
   const [position, setPosition] = useState<Position>({ top: 0, left: 0 });
   const [isSelecting, setIsSelecting] = useState(false);
   const [lastSelectionText, setLastSelectionText] = useState<string>("");
+  const [isToggling, setIsToggling] = useState(false);
   const currentSelectionRef = useRef<Selection | null>(null);
 
   const options = [
@@ -51,6 +52,9 @@ export default function SelectionDropdown({
   }, []);
 
   const checkSelection = useCallback(() => {
+    // Don't check selection if we're toggling the dropdown
+    if (isToggling) return;
+
     const selection = window.getSelection();
     if (!selection || selection.isCollapsed) {
       // Keep dropdown visible if clicking on existing selection
@@ -74,7 +78,7 @@ export default function SelectionDropdown({
     const rect = range.getBoundingClientRect();
     setPosition(calculatePosition(rect));
     setIsVisible(true);
-  }, [calculatePosition, lastSelectionText]);
+  }, [calculatePosition, lastSelectionText, isToggling]);
 
   const handleSelectionStart = useCallback(() => {
     if (!("ontouchstart" in window)) {
@@ -89,7 +93,12 @@ export default function SelectionDropdown({
 
     // If touching on existing selection, toggle dropdown
     if (text && text === lastSelectionText) {
+      setIsToggling(true);
       setIsVisible((prev) => !prev);
+      // Reset toggling state after a short delay
+      setTimeout(() => {
+        setIsToggling(false);
+      }, 300);
       return;
     }
 
@@ -128,7 +137,7 @@ export default function SelectionDropdown({
 
     // Handle selection changes for both desktop and touch
     const handleSelectionChange = () => {
-      if ("ontouchstart" in window && !isSelecting) {
+      if ("ontouchstart" in window && !isSelecting && !isToggling) {
         checkSelection();
       }
     };
@@ -147,6 +156,7 @@ export default function SelectionDropdown({
     handleSelectionStart,
     handleTouchStart,
     isSelecting,
+    isToggling,
   ]);
 
   if (!isVisible) return null;
