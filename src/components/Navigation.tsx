@@ -75,7 +75,7 @@ export default function Navigation({ items }: NavigationProps) {
 
       {/* Sidebar Navigation */}
       <nav
-        className={`fixed lg:static h-dvh lg:w-[160px] bg-white dark:bg-zinc-900 p-3 overflow-y-auto transform transition-transform duration-300 ease-in-out z-50 border-r border-gray-100 dark:border-zinc-800 shadow-lg flex flex-col ${
+        className={`fixed lg:static h-dvh lg:w-[200px] bg-white dark:bg-zinc-900 p-3 overflow-y-auto transform transition-transform duration-300 ease-in-out z-50 border-r border-gray-100 dark:border-zinc-800 shadow-lg flex flex-col ${
           isOpen ? "translate-x-0 w-[140px]" : "-translate-x-full w-0"
         } lg:translate-x-0 lg:top-0`}
       >
