@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
 interface Position {
   top: number;
@@ -25,7 +25,7 @@ export default function SelectionDropdown({
     { id: "example", title: "Give Example" },
   ];
 
-  const calculatePosition = (rect: DOMRect): Position => {
+  const calculatePosition = useCallback((rect: DOMRect): Position => {
     const MARGIN = 10;
     const DROPDOWN_HEIGHT = 120; // Approximate height of dropdown with all options
     const viewportHeight = window.innerHeight;
@@ -47,9 +47,9 @@ export default function SelectionDropdown({
     }
 
     return { top, left };
-  };
+  }, []);
 
-  const checkSelection = () => {
+  const checkSelection = useCallback(() => {
     // Only check selection if we're not actively selecting on touch devices
     if (isSelecting) return;
 
@@ -72,29 +72,29 @@ export default function SelectionDropdown({
       setPosition(calculatePosition(rect));
       setIsVisible(true);
     }, 0);
-  };
+  }, [isSelecting, calculatePosition]);
 
-  const handleSelectionStart = () => {
+  const handleSelectionStart = useCallback(() => {
     setIsVisible(false);
     currentSelectionRef.current = null;
-  };
+  }, []);
 
-  const handleTouchStart = (e: TouchEvent) => {
+  const handleTouchStart = useCallback((e: TouchEvent) => {
     // Check if the touch target is a text node or element with text
     const target = e.target as HTMLElement;
     if (target.nodeType === Node.TEXT_NODE || target.innerText?.trim()) {
       setIsSelecting(true);
       setIsVisible(false); // Hide dropdown when starting selection
     }
-  };
+  }, []);
 
-  const handleTouchEnd = (e: TouchEvent) => {
+  const handleTouchEnd = useCallback(() => {
     if (!isSelecting) return;
 
     setIsSelecting(false);
     // Small delay to ensure selection is complete
     setTimeout(checkSelection, 150);
-  };
+  }, [isSelecting, checkSelection]);
 
   useEffect(() => {
     document.addEventListener("mouseup", checkSelection);
@@ -117,7 +117,13 @@ export default function SelectionDropdown({
       document.removeEventListener("touchstart", handleTouchStart);
       document.removeEventListener("selectionchange", handleSelectionChange);
     };
-  }, [isSelecting]);
+  }, [
+    isSelecting,
+    checkSelection,
+    handleTouchEnd,
+    handleSelectionStart,
+    handleTouchStart,
+  ]);
 
   if (!isVisible) return null;
 
