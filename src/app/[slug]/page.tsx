@@ -18,7 +18,7 @@ export default async function Page({
     const doc = await getDocBySlug((await params).slug);
 
     return (
-      <article className="py-6">
+      <article className="py-6 max-w-3xl mx-auto">
         <h1 className="text-4xl font-bold mb-8">{doc.title}</h1>
         <MarkdownContent content={doc.content} />
       </article>
