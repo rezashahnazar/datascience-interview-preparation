@@ -58,21 +58,18 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="flex h-full bg-background text-foreground">
-            {/* Main content area with AI sidebar */}
-            <div className="flex flex-1 size-full">
-              {/* Navigation sidebar */}
-              <Navigation items={navigationItems} />
-              {/* Main content */}
-              <main className="flex-1 w-full overflow-y-auto px-5 py-4 pt-16 lg:pt-4 lg:p-6">
-                {children}
-              </main>
+            {/* Navigation sidebar */}
+            <Navigation items={navigationItems} />
+            {/* Main content */}
+            <main className="w-full overflow-y-auto px-5 pb-4 pt-16 lg:p-6">
+              {children}
+            </main>
 
-              {/* AI Response sidebar container */}
-              <div
-                className="flex-none w-0 transition-[width] duration-300 ease-spring bg-white dark:bg-zinc-900 shadow-xl border-l border-zinc-200 dark:border-zinc-800"
-                data-sidebar-container
-              />
-            </div>
+            {/* AI Response sidebar container */}
+            <div
+              className="flex-none w-0 transition-[width] duration-300 ease-spring bg-white dark:bg-zinc-900 shadow-xl border-l border-zinc-200 dark:border-zinc-800"
+              data-sidebar-container
+            />
           </div>
           {/* Portal container for dropdowns */}
           <div
