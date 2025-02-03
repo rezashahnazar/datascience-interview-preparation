@@ -30,38 +30,33 @@ export default function SelectionDropdown({
   const calculatePosition = useCallback((rect: DOMRect): Position => {
     const MARGIN = 10;
     const DROPDOWN_HEIGHT = 120; // Approximate height of dropdown with all options
-    const IOS_ACTION_BAR_HEIGHT = 50; // Approximate height of iOS action bar
     const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
 
-    // Detect iOS Safari using a more reliable and TypeScript-friendly method
+    // Always position the dropdown above the selection on iOS
     const isIOS =
       /iPad|iPhone|iPod/.test(navigator.userAgent) &&
-      !/CriOS|FxiOS/.test(navigator.userAgent) && // Exclude Chrome and Firefox on iOS
-      "ontouchend" in document; // Ensure touch support
+      !/CriOS|FxiOS/.test(navigator.userAgent) &&
+      "ontouchend" in document;
 
-    // Calculate initial positions
-    let top = rect.bottom + MARGIN;
+    // Calculate vertical position (always above on iOS)
+    let top = isIOS
+      ? Math.max(MARGIN, rect.top - DROPDOWN_HEIGHT - MARGIN * 2)
+      : rect.bottom + MARGIN;
+
+    // If not iOS and not enough space below, position above
+    if (!isIOS && top + DROPDOWN_HEIGHT > viewportHeight) {
+      top = Math.max(MARGIN, rect.top - DROPDOWN_HEIGHT - MARGIN);
+    }
+
+    // Calculate horizontal position
     const left = Math.max(
       MARGIN,
       Math.min(
         rect.left + rect.width / 2 - 80, // 80 is half of min-w-[160px]
-        window.innerWidth - 160 - MARGIN // Ensure dropdown doesn't go off-screen horizontally
+        viewportWidth - 160 - MARGIN // Ensure dropdown doesn't go off-screen horizontally
       )
     );
-
-    // Check if we're near the bottom of the viewport
-    const isNearBottom =
-      rect.bottom >
-      viewportHeight - (DROPDOWN_HEIGHT + IOS_ACTION_BAR_HEIGHT + MARGIN);
-
-    // On iOS, if selection is near bottom, always show dropdown above
-    if (isIOS && isNearBottom) {
-      // Position dropdown above the selection with extra margin to avoid the action bar
-      top = Math.max(MARGIN, rect.top - DROPDOWN_HEIGHT - MARGIN);
-    } else if (top + DROPDOWN_HEIGHT > viewportHeight) {
-      // For other cases, position above if there's not enough space below
-      top = Math.max(MARGIN, rect.top - DROPDOWN_HEIGHT - MARGIN);
-    }
 
     return { top, left };
   }, []);
