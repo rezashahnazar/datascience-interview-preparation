@@ -17,6 +17,7 @@ export default function SelectionDropdown({
   const [isVisible, setIsVisible] = useState(false);
   const [position, setPosition] = useState<Position>({ top: 0, left: 0 });
   const [isSelecting, setIsSelecting] = useState(false);
+  const [lastSelectionText, setLastSelectionText] = useState<string>("");
   const currentSelectionRef = useRef<Selection | null>(null);
 
   const options = [
@@ -50,43 +51,53 @@ export default function SelectionDropdown({
   }, []);
 
   const checkSelection = useCallback(() => {
-    // Only check selection if we're not actively selecting on touch devices
+    // Only check selection if we're not actively selecting
     if (isSelecting) return;
 
-    setTimeout(() => {
-      const selection = window.getSelection();
-      if (!selection || selection.isCollapsed) {
-        setIsVisible(false);
+    const selection = window.getSelection();
+    if (!selection || selection.isCollapsed) {
+      // Keep dropdown visible if clicking on existing selection
+      const text = selection?.toString().trim() || "";
+      if (text === lastSelectionText && text) {
         return;
       }
+      setIsVisible(false);
+      return;
+    }
 
-      const text = selection.toString().trim();
-      if (!text) {
-        setIsVisible(false);
-        return;
-      }
+    const text = selection.toString().trim();
+    if (!text) {
+      setIsVisible(false);
+      return;
+    }
 
-      currentSelectionRef.current = selection;
-      const range = selection.getRangeAt(0);
-      const rect = range.getBoundingClientRect();
-      setPosition(calculatePosition(rect));
-      setIsVisible(true);
-    }, 0);
-  }, [isSelecting, calculatePosition]);
+    setLastSelectionText(text);
+    currentSelectionRef.current = selection;
+    const range = selection.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    setPosition(calculatePosition(rect));
+    setIsVisible(true);
+  }, [isSelecting, calculatePosition, lastSelectionText]);
 
   const handleSelectionStart = useCallback(() => {
     setIsVisible(false);
     currentSelectionRef.current = null;
   }, []);
 
-  const handleTouchStart = useCallback((e: TouchEvent) => {
-    // Check if the touch target is a text node or element with text
-    const target = e.target as HTMLElement;
-    if (target.nodeType === Node.TEXT_NODE || target.innerText?.trim()) {
-      setIsSelecting(true);
-      setIsVisible(false); // Hide dropdown when starting selection
+  const handleTouchStart = useCallback(() => {
+    const selection = window.getSelection();
+    const text = selection?.toString().trim() || "";
+
+    // If touching on existing selection, toggle dropdown
+    if (text && text === lastSelectionText) {
+      setIsVisible((prev) => !prev);
+      return;
     }
-  }, []);
+
+    // Otherwise, start new selection
+    setIsSelecting(true);
+    setIsVisible(false);
+  }, [lastSelectionText]);
 
   const handleTouchEnd = useCallback(() => {
     if (!isSelecting) return;
@@ -97,14 +108,17 @@ export default function SelectionDropdown({
   }, [isSelecting, checkSelection]);
 
   useEffect(() => {
+    // For desktop: only show dropdown after mouseup (selection complete)
     document.addEventListener("mouseup", checkSelection);
     document.addEventListener("mousedown", handleSelectionStart);
+
+    // For touch devices
     document.addEventListener("touchend", handleTouchEnd);
     document.addEventListener("touchstart", handleTouchStart);
 
-    // Remove the selectionchange handler since we don't want to show dropdown during selection
+    // Remove selectionchange handler for desktop to prevent early dropdown
     const handleSelectionChange = () => {
-      if (!("ontouchstart" in window) && !isSelecting) {
+      if ("ontouchstart" in window) {
         checkSelection();
       }
     };
