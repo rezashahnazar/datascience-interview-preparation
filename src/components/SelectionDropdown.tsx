@@ -53,7 +53,7 @@ export default function SelectionDropdown({
       spaceAbove > DROPDOWN_HEIGHT + MARGIN;
 
     // Calculate vertical position
-    let top = shouldPositionAbove
+    const top = shouldPositionAbove
       ? Math.max(MARGIN, rect.top - DROPDOWN_HEIGHT - MARGIN)
       : rect.bottom + MARGIN;
 
