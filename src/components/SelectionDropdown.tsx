@@ -50,6 +50,9 @@ export default function SelectionDropdown({
   };
 
   const checkSelection = () => {
+    // Only check selection if we're not actively selecting on touch devices
+    if (isSelecting) return;
+
     setTimeout(() => {
       const selection = window.getSelection();
       if (!selection || selection.isCollapsed) {
@@ -81,6 +84,7 @@ export default function SelectionDropdown({
     const target = e.target as HTMLElement;
     if (target.nodeType === Node.TEXT_NODE || target.innerText?.trim()) {
       setIsSelecting(true);
+      setIsVisible(false); // Hide dropdown when starting selection
     }
   };
 
@@ -88,7 +92,8 @@ export default function SelectionDropdown({
     if (!isSelecting) return;
 
     setIsSelecting(false);
-    checkSelection();
+    // Small delay to ensure selection is complete
+    setTimeout(checkSelection, 150);
   };
 
   useEffect(() => {
@@ -97,8 +102,9 @@ export default function SelectionDropdown({
     document.addEventListener("touchend", handleTouchEnd);
     document.addEventListener("touchstart", handleTouchStart);
 
+    // Remove the selectionchange handler since we don't want to show dropdown during selection
     const handleSelectionChange = () => {
-      if ("ontouchstart" in window && isSelecting) {
+      if (!("ontouchstart" in window) && !isSelecting) {
         checkSelection();
       }
     };
