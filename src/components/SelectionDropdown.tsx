@@ -30,7 +30,14 @@ export default function SelectionDropdown({
   const calculatePosition = useCallback((rect: DOMRect): Position => {
     const MARGIN = 10;
     const DROPDOWN_HEIGHT = 120; // Approximate height of dropdown with all options
+    const IOS_ACTION_BAR_HEIGHT = 50; // Approximate height of iOS action bar
     const viewportHeight = window.innerHeight;
+
+    // Detect iOS Safari using a more reliable and TypeScript-friendly method
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+      !/CriOS|FxiOS/.test(navigator.userAgent) && // Exclude Chrome and Firefox on iOS
+      "ontouchend" in document; // Ensure touch support
 
     // Calculate initial positions
     let top = rect.bottom + MARGIN;
@@ -42,9 +49,17 @@ export default function SelectionDropdown({
       )
     );
 
-    // Check if dropdown would go below viewport
-    if (top + DROPDOWN_HEIGHT > viewportHeight) {
-      // Position dropdown above the selection instead
+    // Check if we're near the bottom of the viewport
+    const isNearBottom =
+      rect.bottom >
+      viewportHeight - (DROPDOWN_HEIGHT + IOS_ACTION_BAR_HEIGHT + MARGIN);
+
+    // On iOS, if selection is near bottom, always show dropdown above
+    if (isIOS && isNearBottom) {
+      // Position dropdown above the selection with extra margin to avoid the action bar
+      top = Math.max(MARGIN, rect.top - DROPDOWN_HEIGHT - MARGIN);
+    } else if (top + DROPDOWN_HEIGHT > viewportHeight) {
+      // For other cases, position above if there's not enough space below
       top = Math.max(MARGIN, rect.top - DROPDOWN_HEIGHT - MARGIN);
     }
 
