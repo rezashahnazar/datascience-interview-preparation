@@ -49,7 +49,7 @@ export default function AIResponseDrawer({
         <Drawer.Overlay className="fixed inset-0 bg-black/40" />
         <Drawer.Content
           aria-describedby={undefined}
-          className="fixed bottom-0 left-0 right-0 mt-24 flex h-[80dvh] flex-col rounded-t-[10px] bg-white dark:bg-zinc-900"
+          className="fixed bottom-0 left-0 right-0 mt-24 flex h-[80dvh] flex-col rounded-t-[10px] bg-white dark:bg-zinc-900 focus:outline-none focus-visible:outline-none"
         >
           <Drawer.Title className="sr-only">AI Response</Drawer.Title>
           <div className="absolute inset-0 z-50 pointer-events-none">
