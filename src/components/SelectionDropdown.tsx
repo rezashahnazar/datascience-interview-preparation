@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
+import { Pencil, Info, BookText } from "lucide-react";
 
 interface Position {
   top: number;
@@ -22,9 +23,9 @@ export default function SelectionDropdown({
   const currentSelectionRef = useRef<Selection | null>(null);
 
   const options = [
-    { id: "rewrite", title: "Rewrite" },
-    { id: "describe", title: "Describe More" },
-    { id: "example", title: "Give Example" },
+    { id: "rewrite", title: "Rewrite", icon: Pencil },
+    { id: "describe", title: "Describe More", icon: Info },
+    { id: "example", title: "Give Example", icon: BookText },
   ];
 
   const calculatePosition = useCallback((rect: DOMRect): Position => {
@@ -203,7 +204,7 @@ export default function SelectionDropdown({
       {options.map((option) => (
         <button
           key={option.id}
-          className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 select-none"
+          className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 select-none flex items-center gap-2"
           onMouseDown={(e) => {
             e.preventDefault(); // Prevent selection from being cleared
             onOptionSelect(option.id);
@@ -215,6 +216,7 @@ export default function SelectionDropdown({
             setIsVisible(false);
           }}
         >
+          <option.icon className="w-4 h-4" />
           {option.title}
         </button>
       ))}

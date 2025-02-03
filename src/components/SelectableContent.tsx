@@ -1,7 +1,8 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import SelectionDropdown from "./SelectionDropdown";
+import AIResponseDrawer from "./AIResponseDrawer";
 
 interface SelectableContentProps {
   children: ReactNode;
@@ -12,6 +13,18 @@ export default function SelectableContent({
   children,
   originalContent,
 }: SelectableContentProps) {
+  const [drawerState, setDrawerState] = useState<{
+    isOpen: boolean;
+    option: string;
+    selectedText: string;
+    markdownContent: string;
+  }>({
+    isOpen: false,
+    option: "",
+    selectedText: "",
+    markdownContent: "",
+  });
+
   const findMarkdownContent = (selectedText: string): string => {
     if (!originalContent || !selectedText) return "";
 
@@ -123,12 +136,15 @@ export default function SelectableContent({
     const selectedText = selection.toString().trim();
     const markdownContent = findMarkdownContent(selectedText);
 
-    // Log the selection details
-    console.log(`Selected option: ${option}`);
-    console.log(`Selected text: ${selectedText}`);
-    console.log(`Selected markdown: ${markdownContent}`);
+    // Open drawer with the selected content
+    setDrawerState({
+      isOpen: true,
+      option,
+      selectedText,
+      markdownContent,
+    });
 
-    // Clear the selection after logging
+    // Clear the selection
     selection.removeAllRanges();
   };
 
@@ -136,6 +152,13 @@ export default function SelectableContent({
     <div className="relative min-h-full" data-markdown-content>
       <SelectionDropdown onOptionSelect={handleOptionSelect} />
       <div className="prose dark:prose-invert max-w-none">{children}</div>
+      <AIResponseDrawer
+        isOpen={drawerState.isOpen}
+        onClose={() => setDrawerState((prev) => ({ ...prev, isOpen: false }))}
+        option={drawerState.option}
+        selectedText={drawerState.selectedText}
+        markdownContent={drawerState.markdownContent}
+      />
     </div>
   );
 }
