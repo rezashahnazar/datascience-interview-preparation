@@ -95,6 +95,13 @@ export default function SelectionDropdown({
     if (text && text === lastSelectionText) {
       setIsToggling(true);
       setIsVisible((prev) => !prev);
+
+      // Clear the selection and last selection text when hiding dropdown
+      if (selection) {
+        selection.removeAllRanges();
+        setLastSelectionText("");
+      }
+
       // Reset toggling state after a short delay
       setTimeout(() => {
         setIsToggling(false);
@@ -108,6 +115,8 @@ export default function SelectionDropdown({
   }, [lastSelectionText]);
 
   const handleTouchEnd = useCallback(() => {
+    if (isToggling) return; // Don't process touch end during toggle
+
     setIsSelecting(false);
     // Check selection immediately after touch end
     setTimeout(() => {
@@ -124,7 +133,7 @@ export default function SelectionDropdown({
         }
       }
     }, 100);
-  }, [calculatePosition]);
+  }, [calculatePosition, isToggling]);
 
   useEffect(() => {
     // For desktop: only show dropdown after mouseup (selection complete)
@@ -137,8 +146,13 @@ export default function SelectionDropdown({
 
     // Handle selection changes for both desktop and touch
     const handleSelectionChange = () => {
-      if ("ontouchstart" in window && !isSelecting && !isToggling) {
-        checkSelection();
+      // Don't process selection changes during toggle or when dropdown is intentionally hidden
+      if (!isToggling && "ontouchstart" in window && !isSelecting) {
+        const selection = window.getSelection();
+        const text = selection?.toString().trim() || "";
+        if (text !== lastSelectionText) {
+          checkSelection();
+        }
       }
     };
     document.addEventListener("selectionchange", handleSelectionChange);
@@ -157,6 +171,7 @@ export default function SelectionDropdown({
     handleTouchStart,
     isSelecting,
     isToggling,
+    lastSelectionText,
   ]);
 
   if (!isVisible) return null;
