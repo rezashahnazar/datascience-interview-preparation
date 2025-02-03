@@ -52,7 +52,7 @@ export default function AIResponseDrawer({
           className="fixed bottom-0 left-0 right-0 mt-24 flex h-[80dvh] flex-col rounded-t-[10px] bg-white dark:bg-zinc-900 focus:outline-none focus-visible:outline-none"
         >
           <Drawer.Title className="sr-only">AI Response</Drawer.Title>
-          <div className="absolute inset-0 z-50 pointer-events-none rounded-t-[10px]">
+          <div className="absolute inset-0 z-50 pointer-events-none rounded-t-[10px] overflow-hidden">
             <MagicalLoadingOverlay isLoading={isLoading} />
           </div>
           <div className="relative flex-1">
