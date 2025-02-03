@@ -75,7 +75,7 @@ export default function Navigation({ items }: NavigationProps) {
 
       {/* Sidebar Navigation */}
       <nav
-        className={`fixed top-0 left-0 h-screen w-[280px] lg:w-56 bg-white dark:bg-zinc-900 p-3 overflow-y-auto transform transition-transform duration-300 ease-in-out z-50 border-r border-gray-100 dark:border-zinc-800 shadow-lg flex flex-col ${
+        className={`h-dvh lg:w-[160px] w-0 bg-white dark:bg-zinc-900 p-3 overflow-y-auto transform transition-transform duration-300 ease-in-out z-50 border-r border-gray-100 dark:border-zinc-800 shadow-lg flex flex-col ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0 lg:top-0`}
       >
@@ -89,7 +89,7 @@ export default function Navigation({ items }: NavigationProps) {
             }`}
             onClick={() => setIsOpen(false)}
           >
-            Data Science Learning
+            Magic LX
           </Link>
         </div>
         <ul className="space-y-1.5 mt-6 lg:mt-0 flex-1">

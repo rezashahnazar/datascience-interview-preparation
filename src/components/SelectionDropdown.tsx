@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { Pencil, Info, BookText } from "lucide-react";
+import { createPortal } from "react-dom";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface Position {
   top: number;
@@ -91,11 +93,30 @@ export default function SelectionDropdown({
       return;
     }
 
+    // Get the selection's container element
+    const range = selection.getRangeAt(0);
+    const container = range.commonAncestorContainer.parentElement;
+
+    // Check if the selection is within the sidebar
+    const sidebarContainer = document.querySelector("[data-sidebar-container]");
+    const isWithinSidebar = sidebarContainer?.contains(container);
+
+    // Get the correct rect based on whether it's in the sidebar or not
+    const rect = range.getBoundingClientRect();
+
+    // Adjust position if within sidebar to ensure dropdown appears above it
+    const adjustedPosition = calculatePosition(rect);
+    if (isWithinSidebar) {
+      // Force the dropdown to appear on the left side of the sidebar
+      adjustedPosition.left = Math.min(
+        adjustedPosition.left,
+        rect.left - 170 // 160px (dropdown width) + 10px margin
+      );
+    }
+
     setLastSelectionText(text);
     currentSelectionRef.current = selection;
-    const range = selection.getRangeAt(0);
-    const rect = range.getBoundingClientRect();
-    setPosition(calculatePosition(rect));
+    setPosition(adjustedPosition);
     setIsVisible(true);
   }, [calculatePosition, lastSelectionText, isToggling]);
 
@@ -190,36 +211,49 @@ export default function SelectionDropdown({
 
   if (!isVisible) return null;
 
-  return (
-    <div
-      className="fixed z-[9999] bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-1 min-w-[160px] select-none animate-fade-in [&_*]:!select-none [-webkit-touch-callout:none]"
-      style={{
-        top: `${position.top}px`,
-        left: `${position.left}px`,
-        WebkitTouchCallout: "none",
-        WebkitUserSelect: "none",
-        userSelect: "none",
-      }}
-    >
-      {options.map((option) => (
-        <button
-          key={option.id}
-          className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 select-none flex items-center gap-2"
-          onMouseDown={(e) => {
-            e.preventDefault(); // Prevent selection from being cleared
-            onOptionSelect(option.id);
-            setIsVisible(false);
-          }}
-          onTouchStart={(e) => {
-            e.preventDefault(); // Prevent native touch selection
-            onOptionSelect(option.id);
-            setIsVisible(false);
+  const portalContainer = document.getElementById("dropdown-portal-container");
+  if (!portalContainer) return null;
+
+  return createPortal(
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.15 }}
+          className="fixed bg-white dark:bg-zinc-900 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-800 p-1.5 min-w-[160px] pointer-events-auto isolate"
+          style={{
+            position: "fixed",
+            top: `${position.top}px`,
+            left: `${position.left}px`,
+            zIndex: 999999,
+            transform: "translate3d(0, 0, 0)",
+            willChange: "transform",
           }}
         >
-          <option.icon className="w-4 h-4" />
-          {option.title}
-        </button>
-      ))}
-    </div>
+          {options.map((option) => (
+            <button
+              key={option.id}
+              className="w-full px-4 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 select-none flex items-center gap-2"
+              onMouseDown={(e) => {
+                e.preventDefault(); // Prevent selection from being cleared
+                onOptionSelect(option.id);
+                setIsVisible(false);
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault(); // Prevent native touch selection
+                onOptionSelect(option.id);
+                setIsVisible(false);
+              }}
+            >
+              <option.icon className="w-4 h-4" />
+              {option.title}
+            </button>
+          ))}
+        </motion.div>
+      )}
+    </AnimatePresence>,
+    portalContainer
   );
 }

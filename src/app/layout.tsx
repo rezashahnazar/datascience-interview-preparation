@@ -49,20 +49,36 @@ export default function RootLayout({
   }));
 
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className="h-full" suppressHydrationWarning>
+      <body className={`${inter.className} h-full`}>
         <CustomThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex min-h-dvh bg-background text-foreground">
-            <Navigation items={navigationItems} />
-            <main className="flex-1 px-5 py-4 pt-16 lg:pt-4 lg:p-6 lg:ml-56 w-full overflow-x-hidden">
-              <div className="max-w-3xl mx-auto">{children}</div>
-            </main>
+          <div className="flex h-full bg-background text-foreground">
+            {/* Main content area with AI sidebar */}
+            <div className="flex flex-1 size-full">
+              {/* Navigation sidebar */}
+              <Navigation items={navigationItems} />
+              {/* Main content */}
+              <main className="flex-1 w-full overflow-y-auto px-5 py-4 pt-16 lg:pt-4 lg:p-6">
+                {children}
+              </main>
+
+              {/* AI Response sidebar container */}
+              <div
+                className="flex-none w-0 transition-[width] duration-300 ease-spring bg-white dark:bg-zinc-900 shadow-xl border-l border-zinc-200 dark:border-zinc-800"
+                data-sidebar-container
+              />
+            </div>
           </div>
+          {/* Portal container for dropdowns */}
+          <div
+            id="dropdown-portal-container"
+            className="fixed inset-0 pointer-events-none z-[99999]"
+          />
         </CustomThemeProvider>
       </body>
     </html>

@@ -1,0 +1,119 @@
+"use client";
+
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
+import rehypeRaw from "rehype-raw";
+import remarkGfm from "remark-gfm";
+
+interface MarkdownRendererProps {
+  content: string;
+}
+
+interface CodeProps extends React.ClassAttributes<HTMLElement> {
+  inline?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+}
+
+export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
+  return (
+    <ReactMarkdown
+      rehypePlugins={[rehypeHighlight, rehypeRaw]}
+      remarkPlugins={[remarkGfm]}
+      components={{
+        pre: ({ ...props }) => (
+          <pre
+            className="bg-zinc-50 dark:bg-zinc-900 p-3 rounded-lg overflow-x-auto text-sm shadow-sm border border-zinc-200 dark:border-zinc-800 
+            [&>code]:!bg-transparent [&>code]:p-0 
+            [&>code]:text-zinc-800 dark:[&>code]:text-zinc-200 
+            [&>code_.hljs-keyword]:text-purple-600 dark:[&>code_.hljs-keyword]:text-purple-400 
+            [&>code_.hljs-string]:text-emerald-600 dark:[&>code_.hljs-string]:text-emerald-400 
+            [&>code_.hljs-number]:text-amber-600 dark:[&>code_.hljs-number]:text-amber-400 
+            [&>code_.hljs-comment]:text-zinc-500 dark:[&>code_.hljs-comment]:text-zinc-500 
+            [&>code_.hljs-operator]:text-sky-600 dark:[&>code_.hljs-operator]:text-sky-400 
+            [&>code_.hljs-function]:text-cyan-500 dark:[&>code_.hljs-function]:text-[#00ffff]
+            [&>code_.hljs-title]:text-cyan-500 dark:[&>code_.hljs-title]:text-[#00ffff]
+            [&>code_.hljs-params]:text-zinc-800 dark:[&>code_.hljs-params]:text-zinc-300
+            [&>code_.hljs-variable]:text-orange-600 dark:[&>code_.hljs-variable]:text-orange-300
+            [&>code_.hljs-class]:text-yellow-600 dark:[&>code_.hljs-class]:text-yellow-300"
+            {...props}
+          />
+        ),
+        code: ({ inline, className, children, ...props }: CodeProps) =>
+          inline ? (
+            <code
+              className="bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-sm text-zinc-800 dark:text-zinc-200"
+              {...props}
+            >
+              {children}
+            </code>
+          ) : (
+            <code className={className} {...props}>
+              {children}
+            </code>
+          ),
+        h1: ({ ...props }) => (
+          <h1
+            className="text-3xl font-extrabold mb-8 mt-2 text-zinc-800 dark:text-zinc-100 tracking-tight border-b pb-4 border-zinc-200 dark:border-zinc-800"
+            {...props}
+          />
+        ),
+        h2: ({ ...props }) => (
+          <h2
+            className="text-2xl font-bold mb-6 mt-10 text-zinc-800 dark:text-zinc-100 tracking-tight relative before:content-['#'] before:absolute before:-left-5 before:text-indigo-400 dark:before:text-indigo-500 before:opacity-0 hover:before:opacity-100 before:transition-opacity"
+            {...props}
+          />
+        ),
+        h3: ({ ...props }) => (
+          <h3
+            className="text-xl font-semibold mb-4 mt-8 text-zinc-700 dark:text-zinc-200 tracking-tight"
+            {...props}
+          />
+        ),
+        h4: ({ ...props }) => (
+          <h4
+            className="text-lg font-medium mb-3 mt-6 text-zinc-700 dark:text-zinc-300 tracking-tight"
+            {...props}
+          />
+        ),
+        p: ({ ...props }) => (
+          <p
+            className="mb-3 leading-relaxed text-sm text-gray-700 dark:text-gray-300"
+            {...props}
+          />
+        ),
+        ul: ({ ...props }) => (
+          <ul
+            className="list-disc pl-6 mb-3 space-y-1.5 text-gray-700 dark:text-gray-300"
+            {...props}
+          />
+        ),
+        ol: ({ ...props }) => (
+          <ol
+            className="list-decimal pl-6 mb-3 space-y-1.5 text-gray-700 dark:text-gray-300"
+            {...props}
+          />
+        ),
+        li: ({ children, ...props }) => (
+          <li className="mb-1 pl-1 text-sm" {...props}>
+            <div className="inline">{children}</div>
+          </li>
+        ),
+        a: ({ ...props }) => (
+          <a
+            className="text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm no-underline hover:underline"
+            {...props}
+          />
+        ),
+        blockquote: ({ ...props }) => (
+          <blockquote
+            className="border-l-4 border-gray-200 dark:border-zinc-700 pl-3 italic my-3 text-sm text-gray-600 dark:text-gray-400"
+            {...props}
+          />
+        ),
+      }}
+    >
+      {content}
+    </ReactMarkdown>
+  );
+}

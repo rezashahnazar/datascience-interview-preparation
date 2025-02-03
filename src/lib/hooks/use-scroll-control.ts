@@ -1,88 +1,91 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-
-const SCROLL_THRESHOLD = 100; // pixels from bottom
+import { debounce } from "@/lib/utils";
 
 export function useScrollControl(isLoading: boolean) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const contentRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
-  const wasNearBottomRef = useRef(true);
+  const scrollTimeoutRef = useRef<number | undefined>(undefined);
 
-  const isNearBottom = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return true;
-
-    const { scrollTop, scrollHeight, clientHeight } = container;
-    const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
-
-    return distanceFromBottom <= SCROLL_THRESHOLD;
-  }, []);
-
-  const scrollToBottom = useCallback((smooth = true) => {
+  const checkScroll = useCallback(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const scrollHeight = container.scrollHeight;
-    container.scrollTo({
-      top: scrollHeight,
-      behavior: smooth ? "smooth" : "auto",
-    });
+    const { scrollTop, scrollHeight, clientHeight } = container;
+    const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+    setShowScrollButton(!isNearBottom);
   }, []);
 
-  const handleScroll = useCallback(() => {
-    const isNearBottomNow = isNearBottom();
-    setShowScrollButton(!isNearBottomNow);
-    wasNearBottomRef.current = isNearBottomNow;
-  }, [isNearBottom]);
+  // Optimized scroll handler with debounce
+  const debouncedCheckScroll = useCallback(
+    debounce(checkScroll, 100, { leading: true }),
+    [checkScroll]
+  );
 
-  // Handle content changes
-  const handleContentChange = useCallback(() => {
-    requestAnimationFrame(() => {
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Use passive event listener for better performance
+    container.addEventListener("scroll", debouncedCheckScroll, {
+      passive: true,
+    });
+
+    return () => {
+      container.removeEventListener("scroll", debouncedCheckScroll);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, [debouncedCheckScroll]);
+
+  // Smooth scroll to bottom with requestAnimationFrame
+  const scrollToBottom = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const targetScroll = container.scrollHeight - container.clientHeight;
+    const startScroll = container.scrollTop;
+    const distance = targetScroll - startScroll;
+    const duration = 300; // ms
+    const startTime = performance.now();
+
+    const animateScroll = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Easing function for smooth animation
+      const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+
+      container.scrollTop = startScroll + distance * easeOutCubic;
+
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
+  }, []);
+
+  // Auto-scroll to bottom when loading
+  useEffect(() => {
+    if (isLoading) {
       const container = containerRef.current;
       if (!container) return;
 
-      // Update scroll button visibility
-      handleScroll();
-
-      // Auto-scroll if we were near bottom
-      if (isLoading && wasNearBottomRef.current) {
-        scrollToBottom(false);
+      // Clear any existing scroll timeout
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
       }
-    });
-  }, [handleScroll, isLoading, scrollToBottom]);
 
-  // Watch for content changes
-  useEffect(() => {
-    const container = containerRef.current;
-    const content = contentRef.current;
-    if (!container || !content) return;
-
-    // Initial scroll check
-    handleScroll();
-
-    // Set up content observer
-    const observer = new MutationObserver(handleContentChange);
-    observer.observe(content, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-    });
-
-    // Set up scroll listener
-    container.addEventListener("scroll", handleScroll);
-
-    return () => {
-      container.removeEventListener("scroll", handleScroll);
-      observer.disconnect();
-    };
-  }, [handleScroll, handleContentChange]);
-
-  // Watch for loading state changes
-  useEffect(() => {
-    if (isLoading && wasNearBottomRef.current) {
-      handleContentChange();
+      // Schedule scroll with RAF for smoother performance
+      scrollTimeoutRef.current = window.setTimeout(() => {
+        requestAnimationFrame(() => {
+          container.scrollTop = container.scrollHeight;
+        });
+      }, 100);
     }
-  }, [isLoading, handleContentChange]);
+  }, [isLoading]);
 
   return {
     containerRef,

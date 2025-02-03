@@ -32,8 +32,8 @@ export default function MarkdownContent({ content }: MarkdownContentProps) {
                 [&>code_.hljs-number]:text-amber-600 dark:[&>code_.hljs-number]:text-amber-400 
                 [&>code_.hljs-comment]:text-zinc-500 dark:[&>code_.hljs-comment]:text-zinc-500 
                 [&>code_.hljs-operator]:text-sky-600 dark:[&>code_.hljs-operator]:text-sky-400 
-                [&>code_.hljs-function]:text-blue-600 dark:[&>code_.hljs-function]:text-blue-300
-                [&>code_.hljs-title]:text-blue-600 dark:[&>code_.hljs-title]:text-blue-300
+                [&>code_.hljs-function]:text-cyan-500 dark:[&>code_.hljs-function]:text-[#00ffff]
+                [&>code_.hljs-title]:text-cyan-500 dark:[&>code_.hljs-title]:text-[#00ffff]
                 [&>code_.hljs-params]:text-zinc-800 dark:[&>code_.hljs-params]:text-zinc-300
                 [&>code_.hljs-variable]:text-orange-600 dark:[&>code_.hljs-variable]:text-orange-300
                 [&>code_.hljs-class]:text-yellow-600 dark:[&>code_.hljs-class]:text-yellow-300"

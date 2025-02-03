@@ -34,6 +34,9 @@ export default {
       animation: {
         "fade-in": "fade-in 0.2s ease-out",
       },
+      transitionTimingFunction: {
+        spring: "cubic-bezier(0.4, 0, 0.2, 1)",
+      },
     },
   },
   plugins: [require("@tailwindcss/typography")],

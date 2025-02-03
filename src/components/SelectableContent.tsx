@@ -3,6 +3,8 @@
 import { ReactNode, useState } from "react";
 import SelectionDropdown from "./SelectionDropdown";
 import AIResponseDrawer from "./AIResponseDrawer";
+import AIResponseSidebar from "./AIResponseSidebar";
+import { useMediaQuery } from "@/lib/hooks/use-media-query";
 
 interface SelectableContentProps {
   children: ReactNode;
@@ -13,16 +15,19 @@ export default function SelectableContent({
   children,
   originalContent,
 }: SelectableContentProps) {
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [drawerState, setDrawerState] = useState<{
     isOpen: boolean;
     option: string;
     selectedText: string;
     markdownContent: string;
+    selectionRect: DOMRect | null;
   }>({
     isOpen: false,
     option: "",
     selectedText: "",
     markdownContent: "",
+    selectionRect: null,
   });
 
   const findMarkdownContent = (selectedText: string): string => {
@@ -135,13 +140,16 @@ export default function SelectableContent({
     // Get the selected text before any state changes
     const selectedText = selection.toString().trim();
     const markdownContent = findMarkdownContent(selectedText);
+    const range = selection.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
 
-    // Open drawer with the selected content
+    // Open drawer/sidebar with the selected content
     setDrawerState({
       isOpen: true,
       option,
       selectedText,
       markdownContent,
+      selectionRect: rect,
     });
 
     // Clear the selection
@@ -152,13 +160,24 @@ export default function SelectableContent({
     <div className="relative min-h-full" data-markdown-content>
       <SelectionDropdown onOptionSelect={handleOptionSelect} />
       <div className="prose dark:prose-invert max-w-none">{children}</div>
-      <AIResponseDrawer
-        isOpen={drawerState.isOpen}
-        onClose={() => setDrawerState((prev) => ({ ...prev, isOpen: false }))}
-        option={drawerState.option}
-        selectedText={drawerState.selectedText}
-        markdownContent={drawerState.markdownContent}
-      />
+      {isDesktop ? (
+        <AIResponseSidebar
+          isOpen={drawerState.isOpen}
+          onClose={() => setDrawerState((prev) => ({ ...prev, isOpen: false }))}
+          option={drawerState.option}
+          selectedText={drawerState.selectedText}
+          markdownContent={drawerState.markdownContent}
+          selectionRect={drawerState.selectionRect}
+        />
+      ) : (
+        <AIResponseDrawer
+          isOpen={drawerState.isOpen}
+          onClose={() => setDrawerState((prev) => ({ ...prev, isOpen: false }))}
+          option={drawerState.option}
+          selectedText={drawerState.selectedText}
+          markdownContent={drawerState.markdownContent}
+        />
+      )}
     </div>
   );
 }
